@@ -217,7 +217,7 @@ public class Main {
 			out.printLine("No solution was found.");
 		}else{
 			while(endState!=null){				
-				out.printLine(board.toString(endState));
+				out.print(board.toString(endState));
 				out.printLine("------------------");
 				endState = endState.prev;
 			}
