@@ -35,4 +35,26 @@ X X X X X Q X X X X X X X X X X X X X X
 X X X X X X X X X X Q X X X X X X X X X 
 ```
 
+### Example with count
+```
+12
+```
+```
+Time: 65ms
+Found 14200 possible queen combinations.
+Example: 
+Q X X X X X X X X X X X 
+X X Q X X X X X X X X X 
+X X X X Q X X X X X X X 
+X X X X X X X Q X X X X 
+X X X X X X X X X Q X X 
+X X X X X X X X X X X Q 
+X X X X X Q X X X X X X 
+X X X X X X X X X X Q X 
+X Q X X X X X X X X X X 
+X X X X X X Q X X X X X 
+X X X X X X X X Q X X X 
+X X X Q X X X X X X X X 
+```
+
 ref: [Wiki](https://en.wikipedia.org/wiki/Eight_queens_puzzle)
