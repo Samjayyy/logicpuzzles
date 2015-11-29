@@ -38,6 +38,6 @@ Time: 5ms
 ```
 [timeleft, time left for the resting sand of hourglass1, hourglass2]
 
-Note that when we turn the glashour of size 7 after 3 minutes, it becomes 4 minutes.
+Note that when we turn the hourglass of size 7 after 3 minutes, it becomes 4 minutes.
 
 ref: [Braingle](http://www.braingle.com/brainteasers/29696/hour-glass.html)
