@@ -26,8 +26,12 @@ public class Main {
 		long startTime = System.currentTimeMillis();
 		sol = new int[N];
 		// Calculate
-		cols = diag1 = diag2 = 0;
-		if(findQueen(0)){
+		// Count: (discouraged to use this with N > 15)
+		countQueen();
+		out.printLine("Found "+count+" possible queen combinations.");
+		// find example sol
+		if(findQueen()){
+			out.printLine("Example: ");
 			// print
 			for(int r=0;r<N;r++){
 				for(int c=0;c<N;c++){
@@ -45,10 +49,14 @@ public class Main {
 		System.err.println("Time: "+(System.currentTimeMillis()-startTime)+"ms");
 		out.close();
 	}
-	
+	static boolean findQueen(){
+		cols = diag1 = diag2 = 0;
+		return findQueen(0);
+	}
 	static long cols, diag1, diag2;
+	static int count;
 	static int[] sol;
-	static boolean findQueen(int r){
+	private static boolean findQueen(int r){
 		if(r==N){
 			return true;
 		}
@@ -69,6 +77,29 @@ public class Main {
 			diag2 ^= 1L<<(N+N-(2+r+c));
 		}
 		return false;
+	}
+	static void countQueen(){
+		cols = diag1 = diag2 = 0;
+		count = 0;
+		countQueen(0);
+	}
+	private static void countQueen(int r){
+		if(r==N){
+			count++;
+		}
+		long cm = 1;
+		for(int c=0;c<N;c++,cm<<=1){
+			if((cm & cols) != 0) continue; // col used
+			if(((1L<<(N+r-c-1)) & diag1) != 0) continue; // diag1 used
+			if(((1L<<(N+N-(2+r+c)))&diag2) != 0) continue; // diag2 used
+			cols |= cm;
+			diag1 |= 1L<<(N+r-c-1);
+			diag2 |= 1L<<(N+N-(2+r+c));
+			countQueen(r+1);
+			cols ^= cm;
+			diag1 ^= (1L<<(N+r-c-1));
+			diag2 ^= 1L<<(N+N-(2+r+c));
+		}
 	}
 	
 	static void testDiagonals(){
