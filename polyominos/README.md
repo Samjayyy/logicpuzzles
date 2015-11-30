@@ -50,5 +50,6 @@ For `N = 14`, time: 16473ms
 
 ref: 
  - [WIKI](https://en.wikipedia.org/wiki/Polyomino)
+ - [StackOverflow](http://stackoverflow.com/questions/4650762/programming-contest-question-counting-polyominos/34003753#34003753)
  - [OEIS](https://oeis.org/A000988/list)
  - [VPW](http://www.vlaamseprogrammeerwedstrijd.be/2015/oefenvragen.php)
