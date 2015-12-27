@@ -10,4 +10,5 @@
 * [N-Queens](nqueens/README.md)
 * [Sudoku](sudoku/README.md)
 * [Polyominos](polyominos/README.md)
+* [Nonogram](nonogram/README.md)
 
