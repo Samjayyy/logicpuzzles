@@ -10,7 +10,14 @@ import java.io.Writer;
 import java.util.InputMismatchException;
 import java.util.LinkedList;
 
-public class Main {
+/**
+ * @author Sammie
+ * This was the initial version, 
+ * meanwhile I improved the validation 
+ * just loop once over all columns instead and create a bitmask for fast checking
+ * instead of looping over all columns for all permutations O(C) to O(1)
+ */
+public class MainV1 {
 	
 	// nonogram
 	static int R, C;
@@ -74,8 +81,6 @@ public class Main {
 		// Calculate
 		colVal = new int[R][C];
 		colIx = new int[R][C];
-		mask = new long[R];
-		val = new long[R];
 		if(dfs(0)){
 			// Print
 			for(int r=0;r<R;r++){
@@ -92,60 +97,64 @@ public class Main {
 	}
 	
 	static int[][]colVal, colIx;
-	static long[] mask, val;
 	static boolean dfs(int row){
 		if(row==R){
+			// last check for the rows
+			for(int c=0;c<C;c++){
+				if(colIx[R-1][c]==cols[c].length
+					|| (colIx[R-1][c] == cols[c].length-1
+						&& colVal[R-1][c] == cols[c][colIx[R-1][c]])){
+					continue;
+				}
+				return false;
+			}
 			return true;
 		}
-		rowMask(row); // calculate mask to stay valid in the next row
 		for(int i=0;i<rowPerms[row].length;i++){
-			if((rowPerms[row][i]&mask[row])!=val[row]){
-				continue;
-			}
 			grid[row] = rowPerms[row][i];
-			updateCols(row);
-			if(dfs(row+1)){
-				return true;
+			if(updateCols(row)){
+				if(dfs(row+1)){
+					return true;
+				}
 			}
 		}
 		return false;
 	}
 	
-	static void rowMask(int row){
-		mask[row]=val[row]=0;
+	static boolean updateCols(int row){
 		if(row==0){
-			return;
-		}
-		long ixc=1L;
-		for(int c=0;c<C;c++,ixc<<=1){
-			if(colVal[row-1][c] > 0){
-				// when column at previous row is set, we know for sure what has to be the next bit according to the current size and the expected size
-				mask[row] |= ixc; 
-				if(cols[c][colIx[row-1][c]] > colVal[row-1][c]){
-					val[row] |= ixc; // must set
+			for(int c=0,ixc=1;c<C;c++,ixc<<=1){
+				if((grid[0]&ixc)==0){ // bit not set
+					colVal[0][c]=0;
+				}else{
+					colVal[0][c]=1;
 				}
-			}else if(colVal[row-1][c] == 0 && colIx[row-1][c]==cols[c].length){
-				// can not add anymore since out of indices
-				mask[row] |= ixc;
 			}
+			return true;
 		}
-	}
-	static void updateCols(int row){
-		long ixc = 1L;
-		for(int c=0;c<C;c++,ixc<<=1){
+		for(int c=0,ixc=1;c<C;c++,ixc<<=1){
 			// copy from previous
-			colVal[row][c]=row==0 ? 0 : colVal[row-1][c];
-			colIx[row][c]=row==0 ? 0 : colIx[row-1][c];
-			if((grid[row]&ixc)==0){
-				if(row > 0 && colVal[row-1][c] > 0){ 
-					// bit not set and col is not empty at previous row => close blocksize
+			colVal[row][c]=colVal[row-1][c];
+			colIx[row][c]=colIx[row-1][c];
+			if((grid[row]&ixc)==0){ // bit not set
+				if(colVal[row-1][c] > 0){
+					if(cols[c][colIx[row-1][c]]!=colVal[row-1][c]){
+						return false; // higher number expected at this position
+					}
 					colVal[row][c]=0;
 					colIx[row][c]++;
 				}
 			}else{
-				colVal[row][c]++; // increase value for set bit
+				if(colVal[row-1][c] == 0 && colIx[row-1][c]==cols[c].length){
+					return false; // no numbers left
+				}
+				if(cols[c][colIx[row-1][c]]==colVal[row-1][c]){
+					return false; // low number expected at this position
+				}
+				colVal[row][c]++; // increase value
 			}
 		}
+		return true;
 	}
 	
 	static void calcPerms(int r, int cur, int spaces, long perm, int shift, LinkedList<Long> res){
