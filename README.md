@@ -11,4 +11,6 @@
 * [Sudoku](sudoku/README.md)
 * [Polyominos](polyominos/README.md)
 * [Nonogram](nonogram/README.md)
+* [Hashiwokakero](hashiwokakero/README.md)
+
 
